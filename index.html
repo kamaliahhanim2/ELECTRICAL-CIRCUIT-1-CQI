@@ -8,631 +8,890 @@
   * { box-sizing: border-box; margin: 0; padding: 0; }
   body { font-family: -apple-system, "Segoe UI", system-ui, sans-serif; background: #f0f2f5; color: #1f2328; min-height: 100vh; }
 
-  /* ── HEADER ── */
-  header { background: #1a237e; color: #fff; padding: 16px 24px; display: flex; align-items: center; justify-content: space-between; box-shadow: 0 2px 8px #0003; }
-  header h1 { font-size: 18px; font-weight: 800; letter-spacing: .3px; }
-  header p  { font-size: 12px; color: #c5cae9; margin-top: 2px; }
-  .header-right { display: flex; gap: 10px; }
-  .btn { padding: 8px 16px; border-radius: 8px; border: none; cursor: pointer; font-size: 13px; font-weight: 700; transition: opacity .15s; }
-  .btn:hover { opacity: .85; }
-  .btn-white  { background: #fff; color: #1a237e; }
-  .btn-outline { background: transparent; color: #fff; border: 1.5px solid #ffffff55; }
+  /* ── LOGIN SCREEN ── */
+  .login-screen { display: flex; align-items: center; justify-content: center; min-height: 100vh; background: linear-gradient(135deg,#1a237e 0%,#283593 60%,#3949ab 100%); padding: 20px; }
+  .login-card { background: #fff; border-radius: 16px; padding: 40px 36px; width: 100%; max-width: 400px; box-shadow: 0 20px 60px #0004; }
+  .login-logo  { text-align: center; font-size: 44px; margin-bottom: 8px; }
+  .login-title { text-align: center; font-size: 20px; font-weight: 800; color: #1a237e; margin-bottom: 4px; }
+  .login-sub   { text-align: center; font-size: 13px; color: #888; margin-bottom: 28px; }
+  .login-card label { display: block; font-size: 12px; font-weight: 700; color: #555; margin-bottom: 5px; margin-top: 14px; }
+  .login-card input { width: 100%; padding: 10px 12px; border: 1.5px solid #ddd; border-radius: 8px; font-size: 14px; outline: none; transition: border-color .15s; }
+  .login-card input:focus { border-color: #3949ab; }
+  .btn-login { width: 100%; margin-top: 20px; padding: 12px; background: #1a237e; color: #fff; border: none; border-radius: 10px; font-size: 15px; font-weight: 700; cursor: pointer; transition: background .15s; }
+  .btn-login:hover { background: #283593; }
+  .login-err { color: #d32f2f; font-size: 12px; margin-top: 10px; text-align: center; min-height: 18px; }
+  .login-divider { text-align: center; margin: 16px 0 0; font-size: 12px; color: #aaa; }
 
-  /* ── STATS BAR ── */
-  .stats-bar { display: grid; grid-template-columns: repeat(4,1fr); gap: 12px; padding: 16px 24px; background: #fff; border-bottom: 1px solid #e5e7eb; }
-  .stat { text-align: center; }
-  .stat-num  { font-size: 26px; font-weight: 800; color: #1a237e; }
-  .stat-num.red  { color: #d32f2f; }
+  /* ── SETUP SCREEN ── */
+  .setup-screen { display: none; align-items: center; justify-content: center; min-height: 100vh; background: #f0f2f5; padding: 20px; }
+  .setup-card { background: #fff; border-radius: 16px; padding: 36px; width: 100%; max-width: 560px; box-shadow: 0 4px 24px #0002; }
+  .setup-card h2 { font-size: 18px; font-weight: 800; color: #1a237e; margin-bottom: 8px; }
+  .setup-card p  { font-size: 13px; color: #666; line-height: 1.7; margin-bottom: 20px; }
+  .setup-step { display: flex; gap: 12px; align-items: flex-start; margin-bottom: 14px; }
+  .step-n { width: 26px; height: 26px; border-radius: 50%; background: #1a237e; color: #fff; font-size: 12px; font-weight: 800; display: flex; align-items: center; justify-content: center; flex-shrink: 0; margin-top: 2px; }
+  .step-b { flex: 1; }
+  .step-b b { display: block; font-size: 13px; color: #333; margin-bottom: 3px; }
+  .step-b span { font-size: 12px; color: #777; }
+  .setup-input-row { display: flex; gap: 8px; margin-top: 8px; }
+  .setup-input-row input { flex: 1; padding: 8px 10px; border: 1.5px solid #ddd; border-radius: 7px; font-size: 13px; outline: none; font-family: monospace; }
+  .setup-input-row input:focus { border-color: #3949ab; }
+  .btn-setup-save { padding: 9px 18px; background: #1a237e; color: #fff; border: none; border-radius: 7px; font-size: 13px; font-weight: 700; cursor: pointer; white-space: nowrap; }
+  .setup-note { background: #e8eaf6; border-radius: 8px; padding: 12px 14px; font-size: 12px; color: #3949ab; line-height: 1.6; margin-top: 16px; }
+  code { background: #f0f0f0; padding: 1px 5px; border-radius: 4px; font-size: 12px; color: #c7254e; font-family: monospace; }
+
+  /* ── APP SHELL ── */
+  #app { display: none; flex-direction: column; height: 100vh; }
+
+  /* HEADER */
+  header { background: #1a237e; color: #fff; padding: 12px 20px; display: flex; align-items: center; justify-content: space-between; box-shadow: 0 2px 8px #0003; flex-shrink: 0; }
+  header h1 { font-size: 16px; font-weight: 800; }
+  header p  { font-size: 11px; color: #c5cae9; margin-top: 1px; }
+  .header-right { display: flex; align-items: center; gap: 10px; }
+  .sync-dot { width: 8px; height: 8px; border-radius: 50%; background: #69f0ae; box-shadow: 0 0 6px #69f0ae; flex-shrink: 0; }
+  .sync-dot.off { background: #ff5252; box-shadow: 0 0 6px #ff5252; }
+  .sync-label { font-size: 11px; color: #c5cae9; }
+  .btn-sm { padding: 6px 12px; border-radius: 7px; border: none; cursor: pointer; font-size: 12px; font-weight: 700; transition: opacity .15s; }
+  .btn-sm:hover { opacity: .85; }
+  .btn-white   { background: #fff; color: #1a237e; }
+  .btn-outline { background: transparent; color: #fff; border: 1.5px solid #ffffff44; }
+  .user-chip   { background: #ffffff18; border: 1px solid #ffffff30; border-radius: 20px; padding: 4px 12px; font-size: 12px; color: #e8eaf6; }
+
+  /* STATS */
+  .stats-bar { display: grid; grid-template-columns: repeat(4,1fr); gap: 0; background: #fff; border-bottom: 1px solid #e5e7eb; flex-shrink: 0; }
+  .stat { text-align: center; padding: 10px 8px; border-right: 1px solid #f0f0f0; }
+  .stat:last-child { border-right: none; }
+  .stat-num   { font-size: 22px; font-weight: 800; color: #1a237e; }
+  .stat-num.red    { color: #d32f2f; }
   .stat-num.orange { color: #f57c00; }
-  .stat-num.green { color: #388e3c; }
-  .stat-label { font-size: 11px; color: #57606a; margin-top: 2px; }
+  .stat-num.green  { color: #388e3c; }
+  .stat-label { font-size: 10px; color: #57606a; margin-top: 1px; }
 
-  /* ── LAYOUT ── */
-  .main { display: grid; grid-template-columns: 340px 1fr; gap: 0; height: calc(100vh - 120px); }
-  .panel-left  { background: #fff; border-right: 1px solid #e5e7eb; display: flex; flex-direction: column; overflow: hidden; }
-  .panel-right { overflow-y: auto; padding: 20px; }
+  /* BODY */
+  .body-row { display: flex; flex: 1; overflow: hidden; }
+  .panel-left  { width: 320px; flex-shrink: 0; background: #fff; border-right: 1px solid #e5e7eb; display: flex; flex-direction: column; overflow: hidden; }
+  .panel-right { flex: 1; overflow-y: auto; padding: 20px; background: #f0f2f5; }
 
-  /* ── FORM ── */
-  .form-section { padding: 16px; border-bottom: 1px solid #f0f0f0; }
-  .form-section h2 { font-size: 13px; font-weight: 700; color: #1a237e; margin-bottom: 12px; text-transform: uppercase; letter-spacing: .5px; }
-  .form-group { margin-bottom: 10px; }
-  .form-group label { display: block; font-size: 12px; font-weight: 600; color: #555; margin-bottom: 4px; }
-  .form-group input, .form-group select { width: 100%; padding: 8px 10px; border: 1.5px solid #ddd; border-radius: 7px; font-size: 13px; color: #333; background: #fafafa; outline: none; transition: border-color .15s; }
-  .form-group input:focus, .form-group select:focus { border-color: #3949ab; background: #fff; }
-  .btn-add { width: 100%; padding: 10px; background: #1a237e; color: #fff; border: none; border-radius: 8px; font-size: 14px; font-weight: 700; cursor: pointer; margin-top: 4px; transition: background .15s; }
+  /* FORM */
+  .form-section { padding: 14px 14px 10px; border-bottom: 1px solid #f0f0f0; }
+  .form-section h2 { font-size: 12px; font-weight: 700; color: #1a237e; margin-bottom: 10px; text-transform: uppercase; letter-spacing: .5px; }
+  .fg { margin-bottom: 8px; }
+  .fg label { display: block; font-size: 11px; font-weight: 600; color: #666; margin-bottom: 3px; }
+  .fg input, .fg select { width: 100%; padding: 7px 9px; border: 1.5px solid #e0e0e0; border-radius: 7px; font-size: 13px; outline: none; transition: border-color .15s; background: #fafafa; }
+  .fg input:focus { border-color: #3949ab; background: #fff; }
+  .btn-add { width: 100%; padding: 9px; background: #1a237e; color: #fff; border: none; border-radius: 7px; font-size: 13px; font-weight: 700; cursor: pointer; transition: background .15s; }
   .btn-add:hover { background: #283593; }
 
-  /* ── STUDENT LIST ── */
-  .list-header { padding: 12px 16px 8px; display: flex; align-items: center; justify-content: space-between; }
-  .list-header span { font-size: 12px; font-weight: 700; color: #888; text-transform: uppercase; letter-spacing: .5px; }
-  .search-box { padding: 0 12px 10px; }
-  .search-box input { width: 100%; padding: 7px 10px; border: 1.5px solid #e0e0e0; border-radius: 7px; font-size: 13px; outline: none; }
-  .search-box input:focus { border-color: #3949ab; }
-  .student-list { flex: 1; overflow-y: auto; padding: 0 12px 12px; }
-  .student-card { display: flex; align-items: center; gap: 10px; padding: 10px 12px; border-radius: 10px; cursor: pointer; border: 1.5px solid transparent; margin-bottom: 6px; transition: all .15s; background: #f7f8fa; }
-  .student-card:hover { background: #e8eaf6; border-color: #c5cae9; }
-  .student-card.active { background: #e8eaf6; border-color: #3949ab; }
-  .avatar { width: 36px; height: 36px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 800; font-size: 15px; color: #fff; flex-shrink: 0; }
-  .card-info { flex: 1; min-width: 0; }
-  .card-name { font-size: 13px; font-weight: 700; color: #1a237e; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-  .card-sub { font-size: 11px; color: #888; margin-top: 1px; }
-  .card-badge { font-size: 11px; font-weight: 700; padding: 2px 8px; border-radius: 20px; flex-shrink: 0; }
-  .btn-del { background: none; border: none; cursor: pointer; font-size: 14px; opacity: .5; transition: opacity .15s; flex-shrink: 0; }
-  .btn-del:hover { opacity: 1; }
-  .empty-list { text-align: center; padding: 40px 20px; color: #aaa; }
-  .empty-list .icon { font-size: 40px; margin-bottom: 10px; }
-  .empty-list p { font-size: 13px; line-height: 1.6; }
+  /* LIST */
+  .list-meta { padding: 10px 14px 6px; display: flex; justify-content: space-between; align-items: center; }
+  .list-meta span { font-size: 11px; color: #888; font-weight: 700; text-transform: uppercase; }
+  .list-count { color: #3949ab !important; }
+  .search-wrap { padding: 0 10px 8px; }
+  .search-wrap input { width: 100%; padding: 7px 10px; border: 1.5px solid #e0e0e0; border-radius: 7px; font-size: 13px; outline: none; }
+  .search-wrap input:focus { border-color: #3949ab; }
+  .student-list { flex: 1; overflow-y: auto; padding: 0 10px 10px; }
+  .scard { display: flex; align-items: center; gap: 9px; padding: 9px 10px; border-radius: 9px; cursor: pointer; border: 1.5px solid transparent; margin-bottom: 5px; transition: all .15s; background: #f7f8fa; }
+  .scard:hover  { background: #e8eaf6; }
+  .scard.active { background: #e8eaf6; border-color: #3949ab; }
+  .av { width: 34px; height: 34px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 800; font-size: 14px; color: #fff; flex-shrink: 0; }
+  .ci { flex: 1; min-width: 0; }
+  .cn { font-size: 13px; font-weight: 700; color: #1a237e; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .cs { font-size: 11px; color: #888; margin-top: 1px; }
+  .cbadge { font-size: 10px; font-weight: 700; padding: 2px 7px; border-radius: 20px; flex-shrink: 0; }
+  .bdel { background: none; border: none; cursor: pointer; font-size: 13px; opacity: .4; flex-shrink: 0; transition: opacity .15s; }
+  .bdel:hover { opacity: 1; }
+  .empty-msg { text-align: center; padding: 30px 16px; color: #bbb; }
+  .empty-msg .eicon { font-size: 36px; margin-bottom: 8px; }
+  .empty-msg p { font-size: 12px; line-height: 1.6; }
 
-  /* ── RIGHT PANEL ── */
-  .placeholder { display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100%; color: #bbb; text-align: center; padding: 40px; }
-  .placeholder .icon { font-size: 60px; margin-bottom: 16px; }
+  /* PLACEHOLDER */
+  .placeholder { display: flex; flex-direction: column; align-items: center; justify-content: center; height: 80vh; color: #bbb; text-align: center; }
+  .placeholder .picon { font-size: 56px; margin-bottom: 14px; }
   .placeholder p { font-size: 14px; line-height: 1.7; }
 
-  /* ── STUDENT DETAIL ── */
-  .detail-header { background: #1a237e; color: #fff; border-radius: 12px; padding: 20px 24px; margin-bottom: 20px; display: flex; align-items: center; gap: 16px; }
-  .detail-avatar { width: 54px; height: 54px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 24px; font-weight: 800; color: #fff; border: 2.5px solid #ffffff44; flex-shrink: 0; }
-  .detail-name { font-size: 20px; font-weight: 800; }
-  .detail-sub  { font-size: 12px; color: #c5cae9; margin-top: 3px; }
-  .detail-stats { display: grid; grid-template-columns: repeat(3,1fr); gap: 12px; margin-bottom: 20px; }
-  .ds { background: #fff; border-radius: 10px; padding: 14px 16px; border: 1px solid #e5e7eb; text-align: center; }
-  .ds-num   { font-size: 24px; font-weight: 800; color: #1a237e; }
-  .ds-label { font-size: 11px; color: #888; margin-top: 3px; }
+  /* DETAIL */
+  .dh { border-radius: 12px; padding: 18px 20px; margin-bottom: 16px; display: flex; align-items: center; gap: 14px; color: #fff; }
+  .dav { width: 50px; height: 50px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 22px; font-weight: 800; color: #fff; border: 2px solid #ffffff44; flex-shrink: 0; }
+  .dname { font-size: 18px; font-weight: 800; }
+  .dsub  { font-size: 12px; color: #c5cae9; margin-top: 2px; }
+  .dstats { display: grid; grid-template-columns: repeat(3,1fr); gap: 10px; margin-bottom: 16px; }
+  .ds { background: #fff; border-radius: 10px; padding: 12px; border: 1px solid #e5e7eb; text-align: center; }
+  .dsn { font-size: 22px; font-weight: 800; color: #1a237e; }
+  .dsl { font-size: 10px; color: #888; margin-top: 2px; }
+  .sc { background: #fff; border-radius: 12px; padding: 18px; margin-bottom: 14px; border: 1px solid #e5e7eb; }
+  .sc h3 { font-size: 13px; font-weight: 700; color: #1a237e; margin-bottom: 14px; padding-bottom: 9px; border-bottom: 1px solid #f0f0f0; }
 
-  /* ── ASSESSMENT SECTION ── */
-  .section-card { background: #fff; border-radius: 12px; padding: 20px; margin-bottom: 16px; border: 1px solid #e5e7eb; }
-  .section-card h3 { font-size: 14px; font-weight: 700; color: #1a237e; margin-bottom: 16px; padding-bottom: 10px; border-bottom: 1px solid #f0f0f0; display: flex; align-items: center; gap: 8px; }
-
-  /* Mark entry grid */
-  .mark-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 16px; }
-  .mark-item { display: flex; flex-direction: column; gap: 4px; }
-  .mark-item label { font-size: 11px; font-weight: 600; color: #555; }
-  .mark-row { display: flex; align-items: center; gap: 6px; }
-  .mark-input { width: 70px; padding: 6px 8px; border: 1.5px solid #ddd; border-radius: 6px; font-size: 15px; font-weight: 700; text-align: center; color: #333; outline: none; transition: border-color .15s; }
-  .mark-input:focus { border-color: #3949ab; }
-  .mark-bar-wrap { flex: 1; height: 8px; background: #eee; border-radius: 4px; overflow: hidden; }
-  .mark-bar { height: 100%; border-radius: 4px; transition: width .4s ease; }
-  .mark-level { font-size: 10px; font-weight: 700; margin-top: 2px; }
-
-  .btn-save { width: 100%; padding: 11px; background: #1a237e; color: #fff; border: none; border-radius: 8px; font-size: 14px; font-weight: 700; cursor: pointer; transition: background .15s; }
+  /* MARKS */
+  .mgrid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 14px; }
+  .mi label { display: block; font-size: 11px; font-weight: 600; color: #555; margin-bottom: 4px; }
+  .mrow { display: flex; align-items: center; gap: 6px; }
+  .minput { width: 66px; padding: 6px 7px; border: 1.5px solid #ddd; border-radius: 6px; font-size: 15px; font-weight: 700; text-align: center; outline: none; transition: border-color .15s; }
+  .minput:focus { border-color: #3949ab; }
+  .mbar-wrap { flex: 1; height: 7px; background: #eee; border-radius: 4px; overflow: hidden; }
+  .mbar { height: 100%; border-radius: 4px; transition: width .35s; }
+  .mlv { font-size: 10px; font-weight: 700; margin-top: 2px; }
+  .btn-save { width: 100%; padding: 10px; background: #1a237e; color: #fff; border: none; border-radius: 8px; font-size: 13px; font-weight: 700; cursor: pointer; transition: background .15s; }
   .btn-save:hover { background: #283593; }
+  .saving-indicator { font-size: 11px; color: #888; text-align: center; margin-top: 6px; min-height: 16px; }
 
-  /* ── ANALYSIS ── */
-  .analysis-row { display: flex; align-items: center; gap: 10px; margin-bottom: 10px; }
-  .analysis-topic { flex: 1; font-size: 13px; font-weight: 600; color: #333; }
-  .analysis-track { flex: 2; height: 10px; background: #eee; border-radius: 5px; overflow: hidden; position: relative; }
-  .analysis-fill  { height: 100%; border-radius: 5px; transition: width .5s ease; }
-  .analysis-pct   { width: 42px; text-align: right; font-size: 13px; font-weight: 700; }
-  .analysis-badge { font-size: 10px; font-weight: 700; padding: 2px 8px; border-radius: 12px; width: 72px; text-align: center; }
+  /* ANALYSIS */
+  .arow { display: flex; align-items: center; gap: 8px; margin-bottom: 8px; }
+  .atopic { flex: 1; font-size: 12px; font-weight: 600; color: #333; }
+  .atrack { flex: 2; height: 9px; background: #eee; border-radius: 5px; overflow: hidden; }
+  .afill  { height: 100%; border-radius: 5px; transition: width .5s; }
+  .apct   { width: 38px; text-align: right; font-size: 12px; font-weight: 700; }
+  .abadge { font-size: 10px; font-weight: 700; padding: 2px 7px; border-radius: 12px; width: 66px; text-align: center; }
 
-  /* ── CQI ── */
+  /* CQI */
   .cqi-item { border-left: 3px solid #3949ab; padding: 12px 14px; background: #f7f8fa; border-radius: 0 8px 8px 0; margin-bottom: 10px; }
-  .cqi-item.critical { border-color: #d32f2f; background: #fff5f5; }
-  .cqi-item.weak     { border-color: #f57c00; background: #fffaf5; }
-  .cqi-topic  { font-size: 13px; font-weight: 700; color: #1a237e; margin-bottom: 6px; }
-  .cqi-topic.critical { color: #d32f2f; }
-  .cqi-actions { list-style: none; padding: 0; }
-  .cqi-actions li { font-size: 12px; color: #444; margin-bottom: 4px; line-height: 1.5; display: flex; gap: 6px; }
-  .cqi-type { font-size: 10px; font-weight: 700; padding: 1px 6px; border-radius: 4px; flex-shrink: 0; margin-top: 1px; }
-  .cqi-outcome { font-size: 11px; color: #388e3c; background: #e8f5e9; border-radius: 6px; padding: 8px 10px; margin-top: 8px; }
+  .cqi-item.crit { border-color: #d32f2f; background: #fff5f5; }
+  .cqi-item.weak { border-color: #f57c00; background: #fffaf5; }
+  .cqi-topic { font-size: 13px; font-weight: 700; color: #1a237e; margin-bottom: 5px; }
+  .cqi-topic.crit { color: #d32f2f; }
+  .cqi-acts { list-style: none; }
+  .cqi-acts li { font-size: 12px; color: #444; margin-bottom: 4px; display: flex; gap: 6px; align-items: flex-start; line-height: 1.5; }
+  .ctype { font-size: 10px; font-weight: 700; padding: 1px 6px; border-radius: 4px; flex-shrink: 0; margin-top: 1px; }
+  .coutcome { font-size: 11px; color: #388e3c; background: #e8f5e9; border-radius: 6px; padding: 8px 10px; margin-top: 8px; }
 
-  /* ── TOAST ── */
-  .toast { position: fixed; bottom: 24px; right: 24px; background: #1a237e; color: #fff; padding: 12px 20px; border-radius: 10px; font-size: 13px; font-weight: 600; box-shadow: 0 4px 16px #0003; opacity: 0; transform: translateY(10px); transition: all .25s; pointer-events: none; z-index: 999; }
+  /* TOAST */
+  .toast { position: fixed; bottom: 20px; right: 20px; background: #1a237e; color: #fff; padding: 11px 18px; border-radius: 9px; font-size: 13px; font-weight: 600; box-shadow: 0 4px 16px #0003; opacity: 0; transform: translateY(8px); transition: all .25s; pointer-events: none; z-index: 9999; }
   .toast.show { opacity: 1; transform: translateY(0); }
 
-  /* ── RESPONSIVE ── */
-  @media (max-width: 768px) {
-    .main { grid-template-columns: 1fr; height: auto; }
-    .panel-left { height: auto; max-height: 60vh; }
+  /* LOADER */
+  .loader { display: inline-block; width: 14px; height: 14px; border: 2px solid #c5cae9; border-top-color: #fff; border-radius: 50%; animation: spin .7s linear infinite; vertical-align: middle; margin-right: 6px; }
+  @keyframes spin { to { transform: rotate(360deg); } }
+
+  @media (max-width: 700px) {
+    .body-row { flex-direction: column; }
+    .panel-left { width: 100%; height: 50vh; }
     .stats-bar { grid-template-columns: repeat(2,1fr); }
-    .mark-grid { grid-template-columns: 1fr; }
-    .detail-stats { grid-template-columns: repeat(3,1fr); }
+    .mgrid { grid-template-columns: 1fr; }
   }
 </style>
 </head>
 <body>
 
-<!-- HEADER -->
-<header>
-  <div>
-    <h1>⚡ Electric Circuit 1 — Student Performance Analyzer</h1>
-    <p>Analisis kelemahan pelajar &amp; CQI Action Plan</p>
+<!-- ══ LOGIN SCREEN ══════════════════════════════════════════ -->
+<div class="login-screen" id="login-screen">
+  <div class="login-card">
+    <div class="login-logo">⚡</div>
+    <div class="login-title">EC1 Student Analyzer</div>
+    <div class="login-sub">Electric Circuit 1 · DET10103</div>
+    <label>Email</label>
+    <input id="l-email" type="email" placeholder="email@example.com" onkeydown="if(event.key==='Enter')doLogin()">
+    <label>Password</label>
+    <input id="l-pass" type="password" placeholder="••••••••" onkeydown="if(event.key==='Enter')doLogin()">
+    <button class="btn-login" id="btn-login-submit" onclick="doLogin()">Log Masuk</button>
+    <div class="login-err" id="login-err"></div>
+    <div class="login-divider">Belum ada akaun? <a href="#" onclick="doRegister();return false;" style="color:#3949ab;font-weight:700;">Daftar</a></div>
   </div>
-  <div class="header-right">
-    <button class="btn btn-outline" onclick="exportReport()">📤 Export Laporan</button>
-    <button class="btn btn-white"   onclick="clearAll()">🗑️ Reset Semua</button>
-  </div>
-</header>
-
-<!-- STATS BAR -->
-<div class="stats-bar">
-  <div class="stat"><div class="stat-num"        id="st-total">0</div><div class="stat-label">Jumlah Pelajar</div></div>
-  <div class="stat"><div class="stat-num red"    id="st-critical">0</div><div class="stat-label">⚠ Kritikal (&lt;40%)</div></div>
-  <div class="stat"><div class="stat-num orange" id="st-weak">0</div><div class="stat-label">Lemah (40–59%)</div></div>
-  <div class="stat"><div class="stat-num green"  id="st-good">0</div><div class="stat-label">Lulus (≥60%)</div></div>
 </div>
 
-<!-- MAIN LAYOUT -->
-<div class="main">
+<!-- ══ SETUP SCREEN ══════════════════════════════════════════ -->
+<div class="setup-screen" id="setup-screen">
+  <div class="setup-card">
+    <h2>🔧 Setup Firebase — Satu Kali Sahaja</h2>
+    <p>Dashboard ini guna <strong>Firebase Firestore</strong> untuk simpan data secara real-time. Ikut langkah berikut untuk setup percuma:</p>
 
-  <!-- LEFT: Form + List -->
-  <div class="panel-left">
-
-    <!-- Add Student Form -->
-    <div class="form-section">
-      <h2>➕ Tambah Pelajar</h2>
-      <div class="form-group">
-        <label>Nama Penuh Pelajar</label>
-        <input id="inp-name" type="text" placeholder="cth: Ahmad bin Ali" onkeydown="if(event.key==='Enter')addStudent()">
-      </div>
-      <div class="form-group">
-        <label>No. Matrik / ID</label>
-        <input id="inp-id" type="text" placeholder="cth: 2021EC12345" onkeydown="if(event.key==='Enter')addStudent()">
-      </div>
-      <div class="form-group">
-        <label>Kelas / Seksyen</label>
-        <input id="inp-class" type="text" placeholder="cth: EC1-SEC01" onkeydown="if(event.key==='Enter')addStudent()">
-      </div>
-      <button class="btn-add" onclick="addStudent()">+ Tambah Pelajar</button>
-    </div>
-
-    <!-- Search -->
-    <div class="search-box" style="padding-top:12px;">
-      <input id="search" type="text" placeholder="🔍  Cari nama atau ID..." oninput="renderList()">
-    </div>
-
-    <!-- List header -->
-    <div class="list-header">
-      <span>Senarai Pelajar</span>
-      <span id="list-count" style="color:#3949ab;font-weight:700;">0 pelajar</span>
-    </div>
-
-    <!-- Student list -->
-    <div class="student-list" id="student-list">
-      <div class="empty-list">
-        <div class="icon">👨‍🎓</div>
-        <p>Belum ada pelajar.<br>Tambah pelajar di atas.</p>
+    <div class="setup-step">
+      <div class="step-n">1</div>
+      <div class="step-b">
+        <b>Pergi ke <a href="https://console.firebase.google.com" target="_blank" style="color:#3949ab">console.firebase.google.com</a></b>
+        <span>Log masuk dengan Google account, klik "Add project", namakan projek (cth: <code>ec1-analyzer</code>), disable Google Analytics, klik Create.</span>
       </div>
     </div>
+
+    <div class="setup-step">
+      <div class="step-n">2</div>
+      <div class="step-b">
+        <b>Tambah Web App &amp; aktifkan Firestore + Auth</b>
+        <span>Dalam projek: klik ikon <code>&lt;/&gt;</code> → register app → copy firebaseConfig. Kemudian: Build → Firestore Database → Create (Production mode). Build → Authentication → Get started → Email/Password → Enable.</span>
+      </div>
+    </div>
+
+    <div class="setup-step">
+      <div class="step-n">3</div>
+      <div class="step-b">
+        <b>Set Firestore Rules (Firestore → Rules)</b>
+        <span>Paste rules ini dan klik Publish:</span>
+        <div style="background:#1e1e1e;color:#d4d4d4;padding:10px 12px;border-radius:8px;font-family:monospace;font-size:11px;margin-top:8px;line-height:1.8">
+          rules_version = '2';<br>
+          service cloud.firestore {<br>
+          &nbsp;&nbsp;match /databases/{database}/documents {<br>
+          &nbsp;&nbsp;&nbsp;&nbsp;match /{document=**} {<br>
+          &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;allow read, write: if request.auth != null;<br>
+          &nbsp;&nbsp;&nbsp;&nbsp;}<br>
+          &nbsp;&nbsp;}<br>
+          }
+        </div>
+      </div>
+    </div>
+
+    <div class="setup-step">
+      <div class="step-n">4</div>
+      <div class="step-b">
+        <b>Paste Firebase Config di sini</b>
+        <span>Copy keseluruhan objek <code>firebaseConfig</code> dari Firebase Console:</span>
+        <div class="setup-input-row" style="margin-top:8px">
+          <textarea id="cfg-input" style="flex:1;padding:8px 10px;border:1.5px solid #ddd;border-radius:7px;font-family:monospace;font-size:11px;height:100px;resize:vertical;outline:none;" placeholder='{ "apiKey": "AIza...", "authDomain": "...", "projectId": "...", "storageBucket": "...", "messagingSenderId": "...", "appId": "..." }'></textarea>
+        </div>
+        <button class="btn-setup-save" style="margin-top:8px;width:100%;padding:10px;" onclick="saveConfig()">Simpan &amp; Sambung ke Firebase</button>
+      </div>
+    </div>
+
+    <div class="setup-note">
+      💡 Config ini disimpan dalam browser anda sahaja (localStorage). Data pelajar disimpan dalam Firebase Firestore — accessible dari mana-mana device selepas login.
+    </div>
+    <div class="login-err" id="setup-err" style="margin-top:10px"></div>
   </div>
-
-  <!-- RIGHT: Detail Panel -->
-  <div class="panel-right" id="panel-right">
-    <div class="placeholder">
-      <div class="icon">📊</div>
-      <p>Pilih pelajar dari senarai sebelah kiri<br>untuk lihat prestasi dan input markah.</p>
-    </div>
-  </div>
-
 </div>
 
-<!-- TOAST -->
+<!-- ══ MAIN APP ═══════════════════════════════════════════════ -->
+<div id="app" style="display:none;flex-direction:column;height:100vh;">
+
+  <header>
+    <div>
+      <h1>⚡ EC1 Student Performance Analyzer</h1>
+      <p>DET10103 · Analisis kelemahan pelajar &amp; CQI Action Plan</p>
+    </div>
+    <div class="header-right">
+      <div style="display:flex;align-items:center;gap:5px">
+        <div class="sync-dot" id="sync-dot"></div>
+        <span class="sync-label" id="sync-label">Connecting...</span>
+      </div>
+      <span class="user-chip" id="user-chip">—</span>
+      <button class="btn-sm btn-outline" onclick="exportReport()">📤 Export</button>
+      <button class="btn-sm btn-white"   onclick="doLogout()">Keluar</button>
+    </div>
+  </header>
+
+  <div class="stats-bar">
+    <div class="stat"><div class="stat-num"        id="st-total">0</div><div class="stat-label">Jumlah Pelajar</div></div>
+    <div class="stat"><div class="stat-num red"    id="st-crit">0</div><div class="stat-label">⚠ Kritikal &lt;40%</div></div>
+    <div class="stat"><div class="stat-num orange" id="st-weak">0</div><div class="stat-label">Lemah 40–59%</div></div>
+    <div class="stat"><div class="stat-num green"  id="st-good">0</div><div class="stat-label">Lulus ≥60%</div></div>
+  </div>
+
+  <div class="body-row">
+    <!-- LEFT -->
+    <div class="panel-left">
+      <div class="form-section">
+        <h2>➕ Tambah Pelajar</h2>
+        <div class="fg"><label>Nama Penuh</label><input id="inp-name"  type="text"   placeholder="cth: Ahmad bin Ali"    onkeydown="if(event.key==='Enter')addStudent()"></div>
+        <div class="fg"><label>No. Matrik</label><input id="inp-id"    type="text"   placeholder="cth: 2021EC12345"       onkeydown="if(event.key==='Enter')addStudent()"></div>
+        <div class="fg"><label>Kelas</label>      <input id="inp-class" type="text"   placeholder="cth: EC1-SEC01"         onkeydown="if(event.key==='Enter')addStudent()"></div>
+        <button class="btn-add" id="btn-add" onclick="addStudent()">+ Tambah Pelajar</button>
+      </div>
+      <div class="search-wrap" style="padding-top:10px">
+        <input id="search" type="text" placeholder="🔍  Cari nama atau ID..." oninput="renderList()">
+      </div>
+      <div class="list-meta">
+        <span>Senarai Pelajar</span>
+        <span class="list-count" id="list-count">0 pelajar</span>
+      </div>
+      <div class="student-list" id="student-list">
+        <div class="empty-msg"><div class="eicon">⏳</div><p>Memuatkan data...</p></div>
+      </div>
+    </div>
+
+    <!-- RIGHT -->
+    <div class="panel-right" id="panel-right">
+      <div class="placeholder">
+        <div class="picon">📊</div>
+        <p>Pilih pelajar dari senarai<br>untuk input markah &amp; lihat analisis.</p>
+      </div>
+    </div>
+  </div>
+</div>
+
 <div class="toast" id="toast"></div>
 
-<script>
-// ─── DATA ────────────────────────────────────────────────────
+<!-- ══ FIREBASE SDK ══════════════════════════════════════════ -->
+<script type="module">
+import { initializeApp }                           from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+import { getAuth, signInWithEmailAndPassword,
+         createUserWithEmailAndPassword,
+         onAuthStateChanged, signOut }             from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+import { getFirestore, collection, doc, addDoc,
+         setDoc, deleteDoc, onSnapshot,
+         serverTimestamp, query, orderBy }         from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+
+// ─── CONFIG ────────────────────────────────────────────────
+// CLO1 (C3 - Bloom's Taxonomy: Apply) — Topics mapped to EC1 chapters T1-T5
 const TOPICS = [
-  { id: 'basic',       name: "Basic Concepts",          short: "Basic" },
-  { id: 'ohm',         name: "Ohm's Law",                short: "Ohm" },
-  { id: 'series',      name: "Series & Parallel",        short: "Series/Parallel" },
-  { id: 'kvl',         name: "KVL & KCL",                short: "KVL/KCL" },
-  { id: 'node',        name: "Node & Mesh Analysis",     short: "Node/Mesh" },
-  { id: 'thevenin',    name: "Thevenin & Norton",         short: "Thevenin" },
-  { id: 'superpos',    name: "Superposition Theorem",    short: "Superposition" },
-  { id: 'cap',         name: "Capacitors & Inductors",   short: "Cap/Ind" },
+  { id:'t1', name:"T1: Basic Concepts & Ohm's Law",       clo:'CLO1', bloom:'C3' },
+  { id:'t2', name:"T2: Resistive Circuits (Series/Parallel)", clo:'CLO1', bloom:'C3' },
+  { id:'t3', name:"T3: Methods of Analysis (KVL/KCL)",    clo:'CLO1', bloom:'C3' },
+  { id:'t4', name:"T4: Circuit Theorems (Thevenin/Norton/Superposition)", clo:'CLO1', bloom:'C3' },
+  { id:'t5', name:"T5: Capacitors & Inductors",           clo:'CLO1', bloom:'C3' },
 ];
 
+// Only assessments mapped to CLO1 (C3): Test (15%) + End of Chapter (10%)
+// Final Examination (40%) is Final Assessment — included for full picture
 const ASSESSMENTS = [
-  { id: 'quiz1',   name: "Quiz 1",       weight: 10 },
-  { id: 'quiz2',   name: "Quiz 2",       weight: 10 },
-  { id: 'asgn1',   name: "Assignment 1", weight: 10 },
-  { id: 'asgn2',   name: "Assignment 2", weight: 10 },
-  { id: 'mid',     name: "Midterm Exam", weight: 30 },
-  { id: 'final',   name: "Final Exam",   weight: 30 },
+  { id:'test',  name:"Test",           type:'CA',  weight:15, clo:'CLO1', bloom:'C3' },
+  { id:'eoc',   name:"End of Chapter", type:'CA',  weight:10, clo:'CLO1', bloom:'C3' },
+  { id:'final', name:"Final Examination", type:'FA', weight:40, clo:'CLO1', bloom:'C3' },
 ];
 
+// CA pass mark = 50%, FA pass mark = 50%, BOTH must pass
+const CA_ASSESSMENTS = ['test','eoc'];
+const FA_ASSESSMENTS = ['final'];
+const CA_TOTAL_WEIGHT = 25; // test(15) + eoc(10) out of CA portion
+const FA_TOTAL_WEIGHT = 40;
 const COLORS = ['#1a237e','#283593','#1565c0','#006064','#4527a0','#880e4f','#1b5e20','#bf360c'];
 
-let students  = JSON.parse(localStorage.getItem('eca_students') || '[]');
-let activeId  = null;
+// ─── STATE ─────────────────────────────────────────────────
+let app, auth, db;
+let students   = [];
+let activeId   = null;
+let unsubSnap  = null;
+let saveTimer  = null;
 
-function save() { localStorage.setItem('eca_students', JSON.stringify(students)); }
+// ─── INIT ──────────────────────────────────────────────────
+function loadConfig() { try { return JSON.parse(localStorage.getItem('eca_fb_config')||'null'); } catch { return null; } }
 
-// ─── LEVELS ──────────────────────────────────────────────────
+const cfg = loadConfig();
+if (!cfg) {
+  document.getElementById('login-screen').style.display = 'none';
+  document.getElementById('setup-screen').style.display  = 'flex';
+} else {
+  bootFirebase(cfg);
+}
+
+window.saveConfig = function() {
+  const raw = document.getElementById('cfg-input').value.trim();
+  try {
+    const parsed = JSON.parse(raw);
+    if (!parsed.apiKey || !parsed.projectId) throw new Error('Config tidak lengkap');
+    localStorage.setItem('eca_fb_config', JSON.stringify(parsed));
+    document.getElementById('setup-screen').style.display = 'none';
+    document.getElementById('login-screen').style.display = 'flex';
+    bootFirebase(parsed);
+    toast('✅ Firebase disambung!');
+  } catch(e) {
+    document.getElementById('setup-err').textContent = '⚠️ Config tidak valid: ' + e.message;
+  }
+};
+
+function bootFirebase(cfg) {
+  app  = initializeApp(cfg);
+  auth = getAuth(app);
+  db   = getFirestore(app);
+  onAuthStateChanged(auth, user => {
+    if (user) {
+      document.getElementById('login-screen').style.display = 'none';
+      document.getElementById('setup-screen').style.display = 'none';
+      document.getElementById('app').style.display          = 'flex';
+      document.getElementById('user-chip').textContent      = user.email;
+      startRealtime();
+    } else {
+      if (unsubSnap) { unsubSnap(); unsubSnap = null; }
+      document.getElementById('app').style.display          = 'none';
+      document.getElementById('login-screen').style.display = 'flex';
+      setSyncStatus(false);
+    }
+  });
+}
+
+// ─── AUTH ──────────────────────────────────────────────────
+window.doLogin = async function() {
+  const email = document.getElementById('l-email').value.trim();
+  const pass  = document.getElementById('l-pass').value;
+  const btn   = document.getElementById('btn-login-submit');
+  const err   = document.getElementById('login-err');
+  err.textContent = '';
+  btn.innerHTML   = '<span class="loader"></span>Log masuk...';
+  btn.disabled    = true;
+  try {
+    await signInWithEmailAndPassword(auth, email, pass);
+  } catch(e) {
+    err.textContent = friendlyAuthError(e.code);
+  } finally {
+    btn.innerHTML = 'Log Masuk';
+    btn.disabled  = false;
+  }
+};
+
+window.doRegister = async function() {
+  const email = document.getElementById('l-email').value.trim();
+  const pass  = document.getElementById('l-pass').value;
+  const err   = document.getElementById('login-err');
+  if (!email || !pass) { err.textContent = 'Sila isi email dan password'; return; }
+  if (pass.length < 6)  { err.textContent = 'Password minimum 6 aksara'; return; }
+  err.textContent = '';
+  try {
+    await createUserWithEmailAndPassword(auth, email, pass);
+    toast('✅ Akaun berjaya didaftar!');
+  } catch(e) {
+    err.textContent = friendlyAuthError(e.code);
+  }
+};
+
+window.doLogout = async function() {
+  if (unsubSnap) { unsubSnap(); unsubSnap = null; }
+  await signOut(auth);
+  students = []; activeId = null;
+  renderList(); updateStats();
+};
+
+function friendlyAuthError(code) {
+  const map = {
+    'auth/invalid-email':         'Format email tidak sah.',
+    'auth/user-not-found':        'Email tidak dijumpai. Cuba daftar dahulu.',
+    'auth/wrong-password':        'Password salah.',
+    'auth/invalid-credential':    'Email atau password salah.',
+    'auth/email-already-in-use':  'Email sudah didaftar. Cuba log masuk.',
+    'auth/too-many-requests':     'Terlalu banyak percubaan. Cuba lagi sebentar.',
+  };
+  return map[code] || 'Ralat: ' + code;
+}
+
+// ─── REAL-TIME LISTENER ────────────────────────────────────
+function startRealtime() {
+  setSyncStatus(false);
+  const q = query(collection(db, 'students'), orderBy('createdAt','asc'));
+  unsubSnap = onSnapshot(q,
+    snap => {
+      students = snap.docs.map(d => ({ id: d.id, ...d.data() }));
+      updateStats();
+      renderList();
+      if (activeId) {
+        const still = students.find(s=>s.id===activeId);
+        if (still) openStudent(activeId);
+      }
+      setSyncStatus(true);
+    },
+    err => {
+      setSyncStatus(false);
+      toast('⚠️ Gagal sambung ke database: ' + err.message);
+    }
+  );
+}
+
+function setSyncStatus(online) {
+  const dot   = document.getElementById('sync-dot');
+  const label = document.getElementById('sync-label');
+  if (!dot) return;
+  dot.className   = 'sync-dot' + (online?'':' off');
+  label.textContent = online ? 'Live' : 'Offline';
+}
+
+// ─── HELPERS ───────────────────────────────────────────────
 function level(m) {
-  if (m === null || m === undefined || m === '') return { label:'—', color:'#9e9e9e', bg:'#f5f5f5' };
+  if (m===null||m===undefined||m==='') return { label:'—', color:'#9e9e9e', bg:'#f5f5f5' };
   m = parseFloat(m);
-  if (m < 40)  return { label:'Kritikal', color:'#d32f2f', bg:'#ffebee' };
-  if (m < 60)  return { label:'Lemah',    color:'#f57c00', bg:'#fff3e0' };
-  if (m < 75)  return { label:'Sederhana',color:'#fbc02d', bg:'#fffde7' };
-  return             { label:'Baik',      color:'#388e3c', bg:'#e8f5e9' };
+  if (m < 40)  return { label:'Kritikal',  color:'#d32f2f', bg:'#ffebee' };
+  if (m < 60)  return { label:'Lemah',     color:'#f57c00', bg:'#fff3e0' };
+  if (m < 75)  return { label:'Sederhana', color:'#fbc02d', bg:'#fffde7' };
+  return             { label:'Baik',       color:'#388e3c', bg:'#e8f5e9' };
 }
-
+// Weighted average across all 3 assessments (out of combined 65%)
 function avgMarks(s) {
-  const vals = ASSESSMENTS.map(a => s.marks?.[a.id]).filter(v => v !== '' && v !== undefined && v !== null);
-  if (!vals.length) return null;
-  // weighted average
-  let total = 0, wsum = 0;
-  ASSESSMENTS.forEach(a => {
-    const v = s.marks?.[a.id];
-    if (v !== '' && v !== undefined && v !== null) { total += parseFloat(v) * a.weight; wsum += a.weight; }
+  let total=0, wsum=0;
+  ASSESSMENTS.forEach(a=>{
+    const v=s.marks?.[a.id];
+    if (v!==''&&v!==undefined&&v!==null){ total+=parseFloat(v)*a.weight; wsum+=a.weight; }
   });
-  return wsum ? Math.round(total / wsum) : null;
+  return wsum ? Math.round(total/wsum) : null;
 }
-
+// CA score = weighted average of Test + End of Chapter (out of 25%)
+function caScore(s) {
+  let total=0, wsum=0;
+  CA_ASSESSMENTS.forEach(id=>{
+    const a=ASSESSMENTS.find(x=>x.id===id);
+    const v=s.marks?.[id];
+    if (v!==''&&v!==undefined&&v!==null){ total+=parseFloat(v)*a.weight; wsum+=a.weight; }
+  });
+  return wsum ? Math.round(total/wsum) : null;
+}
+// FA score = Final Examination mark
+function faScore(s) {
+  const v=s.marks?.['final'];
+  return (v!==''&&v!==undefined&&v!==null) ? parseFloat(v) : null;
+}
+// Pass status: must pass BOTH CA (>=50) and FA (>=50)
+function passStatus(s) {
+  const ca=caScore(s), fa=faScore(s);
+  if (ca===null&&fa===null) return { label:'Belum Dinilai', color:'#9e9e9e', bg:'#f5f5f5' };
+  if (ca===null||fa===null) return { label:'Tidak Lengkap', color:'#7b1fa2', bg:'#f3e5f5' };
+  if (ca>=50 && fa>=50)     return { label:'LULUS', color:'#388e3c', bg:'#e8f5e9' };
+  if (ca<50 && fa<50)       return { label:'GAGAL (CA+FA)', color:'#d32f2f', bg:'#ffebee' };
+  if (ca<50)                return { label:'GAGAL CA', color:'#f57c00', bg:'#fff3e0' };
+  return                           { label:'GAGAL FA', color:'#e53935', bg:'#ffebee' };
+}
 function topicAvg(s) {
-  const vals = TOPICS.map(t => s.topicMarks?.[t.id]).filter(v => v !== '' && v !== undefined && v !== null);
-  if (!vals.length) return null;
-  return Math.round(vals.reduce((a,b)=>a+parseFloat(b),0)/vals.length);
+  const vals=TOPICS.map(t=>s.topicMarks?.[t.id]).filter(v=>v!==''&&v!==undefined&&v!==null);
+  return vals.length ? Math.round(vals.reduce((a,b)=>a+parseFloat(b),0)/vals.length) : null;
 }
-
 function avatarColor(name) {
-  let h = 0; for (let c of name) h = (h*31+c.charCodeAt(0))%COLORS.length;
-  return COLORS[h];
+  let h=0; for(let c of name) h=(h*31+c.charCodeAt(0))%COLORS.length; return COLORS[h];
 }
 
-// ─── STATS BAR ───────────────────────────────────────────────
+// ─── STATS ─────────────────────────────────────────────────
 function updateStats() {
-  const total = students.length;
-  let crit=0, weak=0, good=0;
-  students.forEach(s => {
-    const m = avgMarks(s);
-    if (m===null) return;
-    if (m < 40) crit++;
-    else if (m < 60) weak++;
-    else good++;
+  let crit=0,weak=0,good=0;
+  students.forEach(s=>{
+    const m=avgMarks(s); if(m===null)return;
+    if(m<40)crit++; else if(m<60)weak++; else good++;
   });
-  document.getElementById('st-total').textContent    = total;
-  document.getElementById('st-critical').textContent = crit;
-  document.getElementById('st-weak').textContent     = weak;
-  document.getElementById('st-good').textContent     = good;
+  document.getElementById('st-total').textContent = students.length;
+  document.getElementById('st-crit').textContent  = crit;
+  document.getElementById('st-weak').textContent  = weak;
+  document.getElementById('st-good').textContent  = good;
 }
 
-// ─── STUDENT LIST ─────────────────────────────────────────────
+// ─── LIST ──────────────────────────────────────────────────
 function renderList() {
-  const q   = document.getElementById('search').value.toLowerCase();
-  const el  = document.getElementById('student-list');
-  const filtered = students.filter(s =>
-    s.name.toLowerCase().includes(q) || s.studentId.toLowerCase().includes(q)
+  const q  = (document.getElementById('search')?.value||'').toLowerCase();
+  const el = document.getElementById('student-list');
+  if (!el) return;
+  const filtered = students.filter(s=>
+    s.name.toLowerCase().includes(q)||s.studentId.toLowerCase().includes(q)
   );
   document.getElementById('list-count').textContent = filtered.length + ' pelajar';
-
   if (!filtered.length) {
-    el.innerHTML = `<div class="empty-list"><div class="icon">🔍</div><p>Tiada pelajar dijumpai.</p></div>`;
+    el.innerHTML = `<div class="empty-msg"><div class="eicon">👨‍🎓</div><p>${students.length?'Tiada hasil carian.':'Tambah pelajar pertama anda!'}</p></div>`;
     return;
   }
-
-  el.innerHTML = filtered.map(s => {
-    const m   = avgMarks(s);
-    const lv  = level(m);
-    const col = avatarColor(s.name);
-    const ini = s.name.charAt(0).toUpperCase();
-    const isActive = s.id === activeId;
-    return `
-      <div class="student-card${isActive?' active':''}" onclick="openStudent('${s.id}')">
-        <div class="avatar" style="background:${col}">${ini}</div>
-        <div class="card-info">
-          <div class="card-name">${s.name}</div>
-          <div class="card-sub">${s.studentId}${s.className?' · '+s.className:''}</div>
-        </div>
-        <span class="card-badge" style="background:${lv.bg};color:${lv.color}">${m!==null?m+'%':'—'}</span>
-        <button class="btn-del" onclick="event.stopPropagation();deleteStudent('${s.id}')" title="Padam">✕</button>
-      </div>`;
+  el.innerHTML = filtered.map(s=>{
+    const m=avgMarks(s), lv=level(m), col=avatarColor(s.name);
+    return `<div class="scard${s.id===activeId?' active':''}" onclick="openStudent('${s.id}')">
+      <div class="av" style="background:${col}">${s.name.charAt(0).toUpperCase()}</div>
+      <div class="ci">
+        <div class="cn">${s.name}</div>
+        <div class="cs">${s.studentId}${s.className?' · '+s.className:''}</div>
+      </div>
+      <span class="cbadge" style="background:${lv.bg};color:${lv.color}">${m!==null?m+'%':'—'}</span>
+      <button class="bdel" onclick="event.stopPropagation();deleteStudent('${s.id}')" title="Padam">✕</button>
+    </div>`;
   }).join('');
 }
 
-// ─── ADD STUDENT ──────────────────────────────────────────────
-function addStudent() {
+// ─── ADD STUDENT ───────────────────────────────────────────
+window.addStudent = async function() {
   const name = document.getElementById('inp-name').value.trim();
   const sid  = document.getElementById('inp-id').value.trim();
   const cls  = document.getElementById('inp-class').value.trim();
-  if (!name) { toast('⚠️ Sila masukkan nama pelajar'); return; }
-  if (!sid)  { toast('⚠️ Sila masukkan No. Matrik'); return; }
-  const s = { id: Date.now().toString(), name, studentId: sid.toUpperCase(), className: cls, marks:{}, topicMarks:{} };
-  students.unshift(s);
-  save(); updateStats(); renderList();
-  document.getElementById('inp-name').value='';
-  document.getElementById('inp-id').value='';
-  document.getElementById('inp-class').value='';
-  toast('✅ '+name+' telah ditambah!');
-  openStudent(s.id);
-}
+  if (!name){ toast('⚠️ Sila masukkan nama'); return; }
+  if (!sid) { toast('⚠️ Sila masukkan No. Matrik'); return; }
+  const btn = document.getElementById('btn-add');
+  btn.textContent = 'Menyimpan...'; btn.disabled = true;
+  try {
+    const ref = await addDoc(collection(db,'students'), {
+      name, studentId: sid.toUpperCase(), className: cls,
+      marks:{}, topicMarks:{}, createdAt: serverTimestamp()
+    });
+    ['inp-name','inp-id','inp-class'].forEach(id=>document.getElementById(id).value='');
+    toast('✅ '+name+' ditambah!');
+    openStudent(ref.id);
+  } catch(e) {
+    toast('❌ Gagal: '+e.message);
+  } finally {
+    btn.textContent = '+ Tambah Pelajar'; btn.disabled = false;
+  }
+};
 
-// ─── DELETE ───────────────────────────────────────────────────
-function deleteStudent(id) {
+// ─── DELETE ────────────────────────────────────────────────
+window.deleteStudent = async function(id) {
   if (!confirm('Padam pelajar ini?')) return;
-  students = students.filter(s=>s.id!==id);
-  save();
-  if (activeId===id) { activeId=null; showPlaceholder(); }
-  updateStats(); renderList();
+  await deleteDoc(doc(db,'students',id));
+  if (activeId===id){ activeId=null; document.getElementById('panel-right').innerHTML=`<div class="placeholder"><div class="picon">📊</div><p>Pilih pelajar untuk lihat analisis.</p></div>`; }
   toast('🗑️ Pelajar dipadam');
-}
+};
 
-function clearAll() {
-  if (!confirm('Reset SEMUA data? Tindakan ini tidak boleh dibatalkan.')) return;
-  students=[]; activeId=null; save(); updateStats(); renderList(); showPlaceholder();
-  toast('🗑️ Semua data dipadam');
-}
-
-// ─── OPEN STUDENT ─────────────────────────────────────────────
-function openStudent(id) {
+// ─── OPEN STUDENT ──────────────────────────────────────────
+window.openStudent = function(id) {
   activeId = id;
   renderList();
-  const s = students.find(x=>x.id===id);
-  if (!s) return;
-  const col = avatarColor(s.name);
-  const m   = avgMarks(s);
-  const lv  = level(m);
-  const tAvg = topicAvg(s);
-  const tLv  = level(tAvg);
-  const panel = document.getElementById('panel-right');
-
-  panel.innerHTML = `
-    <!-- Header -->
-    <div class="detail-header" style="background:${lv.color==='#d32f2f'?'#b71c1c':'#1a237e'}">
-      <div class="detail-avatar" style="background:${col}">${s.name.charAt(0).toUpperCase()}</div>
-      <div>
-        <div class="detail-name">${s.name}</div>
-        <div class="detail-sub">ID: ${s.studentId}${s.className?' &nbsp;|&nbsp; Kelas: '+s.className:''}</div>
+  const s = students.find(x=>x.id===id); if(!s) return;
+  const col=avatarColor(s.name);
+  const ca=caScore(s), fa=faScore(s), ps=passStatus(s);
+  const tAvg=topicAvg(s), tLv=level(tAvg);
+  document.getElementById('panel-right').innerHTML = `
+    <div class="dh" style="background:${ps.color==='#d32f2f'||ps.color==='#e53935'?'#b71c1c':'#1a237e'}">
+      <div class="dav" style="background:${col}">${s.name.charAt(0).toUpperCase()}</div>
+      <div style="flex:1">
+        <div class="dname">${s.name}</div>
+        <div class="dsub">ID: ${s.studentId}${s.className?' &nbsp;|&nbsp; '+s.className:''}</div>
+      </div>
+      <div style="text-align:right">
+        <div style="font-size:11px;color:#c5cae9;margin-bottom:4px">CLO1 · C3 (Bloom)</div>
+        <span style="background:${ps.bg};color:${ps.color};font-size:12px;font-weight:800;padding:4px 12px;border-radius:20px">${ps.label}</span>
       </div>
     </div>
-
-    <!-- Summary stats -->
-    <div class="detail-stats">
+    <div class="dstats" style="grid-template-columns:repeat(4,1fr)">
       <div class="ds">
-        <div class="ds-num" style="color:${lv.color}">${m!==null?m+'%':'—'}</div>
-        <div class="ds-label">Purata Assessment</div>
+        <div class="dsn" style="color:${level(ca).color}">${ca!==null?ca+'%':'—'}</div>
+        <div class="dsl">CA Score</div>
+        <div style="font-size:9px;color:#aaa;margin-top:2px">Test+EoC (25%)</div>
       </div>
       <div class="ds">
-        <div class="ds-num" style="color:${tLv.color}">${tAvg!==null?tAvg+'%':'—'}</div>
-        <div class="ds-label">Purata Topik</div>
+        <div class="dsn" style="color:${level(fa).color}">${fa!==null?fa+'%':'—'}</div>
+        <div class="dsl">FA Score</div>
+        <div style="font-size:9px;color:#aaa;margin-top:2px">Final Exam (40%)</div>
       </div>
       <div class="ds">
-        <div class="ds-num" style="color:${lv.color}">${lv.label}</div>
-        <div class="ds-label">Status</div>
+        <div class="dsn" style="color:${tLv.color}">${tAvg!==null?tAvg+'%':'—'}</div>
+        <div class="dsl">Avg Topik</div>
+        <div style="font-size:9px;color:#aaa;margin-top:2px">T1–T5</div>
+      </div>
+      <div class="ds">
+        <div class="dsn" style="color:${ps.color};font-size:14px">${ps.label}</div>
+        <div class="dsl">Status CLO1</div>
+        <div style="font-size:9px;color:#aaa;margin-top:2px">Pass BOTH ≥50%</div>
       </div>
     </div>
-
-    <!-- Assessment Marks -->
-    <div class="section-card">
-      <h3>📝 Markah Assessment</h3>
-      <div class="mark-grid">
-        ${ASSESSMENTS.map(a => {
-          const v  = s.marks?.[a.id] ?? '';
-          const lv = level(v===''?null:v);
-          const w  = v===''?0:Math.min(100,parseFloat(v));
-          return `
-          <div class="mark-item">
-            <label>${a.name} <span style="color:#aaa;font-weight:400;">(${a.weight}%)</span></label>
-            <div class="mark-row">
-              <input class="mark-input" type="number" min="0" max="100"
-                value="${v}" placeholder="—"
-                style="border-color:${v!==''?lv.color:'#ddd'}"
-                onchange="saveMark('${s.id}','assessment','${a.id}',this.value)"
-                oninput="liveBar(this,'bar-a-${a.id}','lv-a-${a.id}')">
-              <div class="mark-bar-wrap">
-                <div class="mark-bar" id="bar-a-${a.id}" style="width:${w}%;background:${lv.color}"></div>
-              </div>
-            </div>
-            <div class="mark-level" id="lv-a-${a.id}" style="color:${lv.color}">${v!==''?lv.label+' ('+v+'%)':''}</div>
-          </div>`;
-        }).join('')}
+    <div class="sc">
+      <h3>📝 Markah Assessment — CLO1 (C3: Apply)</h3>
+      <div style="background:#e8eaf6;border-radius:8px;padding:10px 12px;margin-bottom:12px;font-size:12px;color:#3949ab;line-height:1.7">
+        <b>Pemetaan Assessment → CLO1 (C3 — Bloom's Taxonomy: Apply)</b><br>
+        Pelajar <b>MESTI LULUS KEDUA-DUA</b> CA (≥50%) dan FA (≥50%) untuk lulus CLO1.
       </div>
-      <button class="btn-save" onclick="saveAll('${s.id}')">💾 Simpan Markah</button>
-    </div>
-
-    <!-- Topic Marks -->
-    <div class="section-card">
-      <h3>📚 Markah Per Topik EC1</h3>
-      <div class="mark-grid">
-        ${TOPICS.map(t => {
-          const v  = s.topicMarks?.[t.id] ?? '';
-          const lv = level(v===''?null:v);
-          const w  = v===''?0:Math.min(100,parseFloat(v));
-          return `
-          <div class="mark-item">
-            <label>${t.name}</label>
-            <div class="mark-row">
-              <input class="mark-input" type="number" min="0" max="100"
-                value="${v}" placeholder="—"
-                style="border-color:${v!==''?lv.color:'#ddd'}"
-                onchange="saveMark('${s.id}','topic','${t.id}',this.value)"
-                oninput="liveBar(this,'bar-t-${t.id}','lv-t-${t.id}')">
-              <div class="mark-bar-wrap">
-                <div class="mark-bar" id="bar-t-${t.id}" style="width:${w}%;background:${lv.color}"></div>
-              </div>
-            </div>
-            <div class="mark-level" id="lv-t-${t.id}" style="color:${lv.color}">${v!==''?lv.label+' ('+v+'%)':''}</div>
-          </div>`;
-        }).join('')}
+      <div class="mgrid" style="grid-template-columns:repeat(3,1fr)">
+        ${ASSESSMENTS.map(a=>markCell(s,'marks',a.id,
+          `${a.name} <span style="color:${a.type==='CA'?'#1565c0':'#6a1b9a'};font-size:10px">[${a.type} · ${a.weight}%]</span>`
+        )).join('')}
       </div>
-      <button class="btn-save" onclick="saveAll('${s.id}')">💾 Simpan Markah</button>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:10px;margin-bottom:12px">
+        <div style="background:${ca!==null&&ca<50?'#ffebee':'#e8f5e9'};border-radius:8px;padding:10px 14px;text-align:center">
+          <div style="font-size:11px;font-weight:700;color:#555;margin-bottom:4px">CA Score (Test + EoC)</div>
+          <div style="font-size:22px;font-weight:800;color:${ca!==null&&ca<50?'#d32f2f':'#388e3c'}">${ca!==null?ca+'%':'—'}</div>
+          <div style="font-size:10px;color:${ca!==null&&ca<50?'#d32f2f':'#388e3c'};font-weight:700">${ca===null?'Belum diisi':ca>=50?'✅ LULUS CA':'❌ GAGAL CA (min 50%)'}</div>
+        </div>
+        <div style="background:${fa!==null&&fa<50?'#ffebee':'#e8f5e9'};border-radius:8px;padding:10px 14px;text-align:center">
+          <div style="font-size:11px;font-weight:700;color:#555;margin-bottom:4px">FA Score (Final Exam)</div>
+          <div style="font-size:22px;font-weight:800;color:${fa!==null&&fa<50?'#d32f2f':'#388e3c'}">${fa!==null?fa+'%':'—'}</div>
+          <div style="font-size:10px;color:${fa!==null&&fa<50?'#d32f2f':'#388e3c'};font-weight:700">${fa===null?'Belum diisi':fa>=50?'✅ LULUS FA':'❌ GAGAL FA (min 50%)'}</div>
+        </div>
+      </div>
+      <button class="btn-save" onclick="saveMarks('${s.id}')">💾 Simpan Markah</button>
+      <div class="saving-indicator" id="save-ind"></div>
     </div>
-
-    <!-- Analysis -->
+    <div class="sc">
+      <h3>📚 Markah Per Topik (T1–T5) · CLO1 C3</h3>
+      <div style="background:#fff8e1;border-radius:8px;padding:8px 12px;margin-bottom:12px;font-size:11px;color:#795548">
+        Masukkan markah pelajar per topik untuk kenal pasti topik mana yang lemah dalam domain <b>C3 (Apply)</b>.
+      </div>
+      <div class="mgrid">${TOPICS.map(t=>markCell(s,'topicMarks',t.id,
+        `${t.name} <span style="font-size:9px;color:#888">[${t.clo} · ${t.bloom}]</span>`
+      )).join('')}</div>
+      <button class="btn-save" onclick="saveMarks('${s.id}')">💾 Simpan Markah</button>
+    </div>
     ${buildAnalysis(s)}
-
-    <!-- CQI -->
     ${buildCQI(s)}
   `;
+};
+
+function markCell(s, field, key, label) {
+  const v  = s[field]?.[key] ?? '';
+  const lv = level(v===''?null:v);
+  const w  = v===''?0:Math.min(100,parseFloat(v));
+  return `<div class="mi">
+    <label>${label}</label>
+    <div class="mrow">
+      <input class="minput" type="number" min="0" max="100"
+        id="inp-${field}-${key}"
+        value="${v}" placeholder="—"
+        style="border-color:${v!==''?lv.color:'#ddd'}"
+        oninput="liveBar(this,'bar-${field}-${key}','lv-${field}-${key}')">
+      <div class="mbar-wrap"><div class="mbar" id="bar-${field}-${key}" style="width:${w}%;background:${lv.color}"></div></div>
+    </div>
+    <div class="mlv" id="lv-${field}-${key}" style="color:${lv.color}">${v!==''?lv.label+' ('+v+'%)':''}</div>
+  </div>`;
 }
 
-// ─── LIVE BAR UPDATE ──────────────────────────────────────────
-function liveBar(input, barId, lvId) {
-  const v  = input.value.trim();
-  const lv = level(v===''?null:parseFloat(v));
-  const w  = v===''?0:Math.min(100,Math.max(0,parseFloat(v)));
-  const bar = document.getElementById(barId);
-  const lvEl= document.getElementById(lvId);
-  if (bar) { bar.style.width=w+'%'; bar.style.background=lv.color; }
-  if (lvEl){ lvEl.textContent=v!==''?lv.label+' ('+v+'%)':''; lvEl.style.color=lv.color; }
-  input.style.borderColor = v!==''?lv.color:'#ddd';
-}
+// ─── LIVE BAR ──────────────────────────────────────────────
+window.liveBar = function(input, barId, lvId) {
+  const v=input.value.trim(), lv=level(v===''?null:parseFloat(v));
+  const w=v===''?0:Math.min(100,Math.max(0,parseFloat(v)));
+  const bar=document.getElementById(barId), lvEl=document.getElementById(lvId);
+  if(bar){bar.style.width=w+'%';bar.style.background=lv.color;}
+  if(lvEl){lvEl.textContent=v?lv.label+' ('+v+'%)':'';lvEl.style.color=lv.color;}
+  input.style.borderColor=v?lv.color:'#ddd';
+};
 
-// ─── SAVE MARK ────────────────────────────────────────────────
-function saveMark(sid, type, key, val) {
+// ─── SAVE MARKS to FIRESTORE ───────────────────────────────
+window.saveMarks = async function(sid) {
   const s = students.find(x=>x.id===sid); if(!s) return;
-  if (type==='assessment') s.marks[key]      = val===''?'':parseFloat(val);
-  else                     s.topicMarks[key] = val===''?'':parseFloat(val);
-  save(); updateStats(); renderList();
-}
+  const marks={}, topicMarks={};
+  ASSESSMENTS.forEach(a=>{ const el=document.getElementById(`inp-marks-${a.id}`); if(el){ const v=el.value.trim(); marks[a.id]=v===''?'':parseFloat(v); }});
+  TOPICS.forEach(t=>{ const el=document.getElementById(`inp-topicMarks-${t.id}`); if(el){ const v=el.value.trim(); topicMarks[t.id]=v===''?'':parseFloat(v); }});
+  const ind = document.getElementById('save-ind');
+  if(ind){ ind.innerHTML='<span class="loader" style="border-color:#ddd;border-top-color:#1a237e"></span> Menyimpan...'; }
+  try {
+    await setDoc(doc(db,'students',sid), { marks, topicMarks }, { merge:true });
+    if(ind) ind.textContent = '✅ Tersimpan — semua pengguna akan nampak perubahan ini';
+    toast('✅ Markah disimpan ke Firebase!');
+    setTimeout(()=>{ if(ind) ind.textContent=''; },4000);
+  } catch(e) {
+    if(ind) ind.textContent = '❌ Gagal simpan: '+e.message;
+    toast('❌ Gagal simpan: '+e.message);
+  }
+};
 
-function saveAll(sid) {
-  // collect all inputs in the panel and save
-  document.querySelectorAll('.mark-input').forEach(inp => {
-    const onchg = inp.getAttribute('onchange');
-    if (onchg) { const fn = new Function(onchg); fn.call(inp); }
-  });
-  save(); updateStats(); renderList();
-  toast('✅ Markah disimpan!');
-  // re-render the analysis + cqi sections
-  const s = students.find(x=>x.id===sid); if(!s) return;
-  const aEl = document.getElementById('analysis-section');
-  const cEl = document.getElementById('cqi-section');
-  if (aEl) aEl.outerHTML = buildAnalysis(s);
-  if (cEl) cEl.outerHTML = buildCQI(s);
-}
-
-// ─── ANALYSIS SECTION ─────────────────────────────────────────
+// ─── ANALYSIS ──────────────────────────────────────────────
 function buildAnalysis(s) {
-  const entries = TOPICS.map(t=>({ ...t, v: s.topicMarks?.[t.id] }))
-    .filter(t=> t.v!==''&&t.v!==undefined&&t.v!==null);
-  if (!entries.length) return `<div class="section-card" id="analysis-section"><h3>📊 Analisis Topik</h3><p style="color:#aaa;font-size:13px;">Masukkan markah topik di atas untuk lihat analisis.</p></div>`;
-
-  const sorted = [...entries].sort((a,b)=>parseFloat(a.v)-parseFloat(b.v));
-  return `
-    <div class="section-card" id="analysis-section">
-      <h3>📊 Analisis Topik (Teruk → Baik)</h3>
-      ${sorted.map(t=>{
-        const lv = level(t.v);
-        const w  = Math.min(100,parseFloat(t.v));
-        return `
-        <div class="analysis-row">
-          <div class="analysis-topic">${t.name}</div>
-          <div class="analysis-track"><div class="analysis-fill" style="width:${w}%;background:${lv.color}"></div></div>
-          <div class="analysis-pct" style="color:${lv.color}">${parseFloat(t.v).toFixed(0)}%</div>
-          <span class="analysis-badge" style="background:${lv.bg};color:${lv.color}">${lv.label}</span>
-        </div>`;
-      }).join('')}
-    </div>`;
+  const entries=TOPICS.map(t=>({...t,v:s.topicMarks?.[t.id]})).filter(t=>t.v!==''&&t.v!==undefined&&t.v!==null);
+  if(!entries.length) return `<div class="sc"><h3>📊 Analisis Prestasi CLO1 (C3) Per Topik</h3><p style="color:#aaa;font-size:12px">Masukkan markah topik T1–T5 untuk lihat analisis.</p></div>`;
+  const sorted=[...entries].sort((a,b)=>parseFloat(a.v)-parseFloat(b.v));
+  const caS=caScore(s), faS=faScore(s);
+  return `<div class="sc">
+    <h3>📊 Analisis Prestasi CLO1 (C3 — Apply) Per Topik</h3>
+    <div style="background:#f7f8fa;border-radius:8px;padding:10px 14px;margin-bottom:14px;font-size:12px;color:#555;line-height:1.8">
+      <b>CLO1:</b> Apply concepts and principles of electrical circuit theorems and laws to DC electrical circuits using various methods and approaches<br>
+      <b>Domain:</b> Cognitive · <b>Level:</b> C3 (Apply) — Bloom's Taxonomy
+    </div>
+    ${sorted.map(t=>{const lv=level(t.v),w=Math.min(100,parseFloat(t.v));return `
+    <div class="arow">
+      <div class="atopic" style="font-size:11px">${t.name}</div>
+      <div class="atrack"><div class="afill" style="width:${w}%;background:${lv.color}"></div></div>
+      <div class="apct" style="color:${lv.color}">${parseFloat(t.v).toFixed(0)}%</div>
+      <span class="abadge" style="background:${lv.bg};color:${lv.color}">${lv.label}</span>
+    </div>`;}).join('')}
+    <div style="border-top:1px solid #f0f0f0;margin-top:14px;padding-top:12px;display:grid;grid-template-columns:1fr 1fr;gap:8px">
+      <div style="font-size:11px;color:#555">
+        <b>CA (Test + EoC):</b> <span style="color:${caS!==null&&caS<50?'#d32f2f':'#388e3c'};font-weight:700">${caS!==null?caS+'%':'—'} ${caS!==null?caS>=50?'✅':'❌':''}</span>
+      </div>
+      <div style="font-size:11px;color:#555">
+        <b>FA (Final Exam):</b> <span style="color:${faS!==null&&faS<50?'#d32f2f':'#388e3c'};font-weight:700">${faS!==null?faS+'%':'—'} ${faS!==null?faS>=50?'✅':'❌':''}</span>
+      </div>
+    </div>
+  </div>`;
 }
 
-// ─── CQI SECTION ──────────────────────────────────────────────
+// ─── CQI ───────────────────────────────────────────────────
 function buildCQI(s) {
-  const weak = TOPICS.map(t=>({ ...t, v: s.topicMarks?.[t.id] }))
-    .filter(t=> t.v!==''&&t.v!==undefined&&t.v!==null&&parseFloat(t.v)<60)
+  const ca=caScore(s), fa=faScore(s), ps=passStatus(s);
+  const weakTopics=TOPICS.map(t=>({...t,v:s.topicMarks?.[t.id]}))
+    .filter(t=>t.v!==''&&t.v!==undefined&&t.v!==null&&parseFloat(t.v)<60)
     .sort((a,b)=>parseFloat(a.v)-parseFloat(b.v));
 
-  if (!weak.length) {
-    const allFilled = TOPICS.every(t=>s.topicMarks?.[t.id]!==''&&s.topicMarks?.[t.id]!==undefined&&s.topicMarks?.[t.id]!==null);
-    const msg = allFilled
-      ? '<div style="text-align:center;padding:20px"><span style="font-size:36px">🎉</span><p style="color:#388e3c;font-weight:700;margin-top:10px">Tiada kelemahan! Pelajar menunjukkan prestasi baik di semua topik.</p></div>'
-      : '<p style="color:#aaa;font-size:13px">Masukkan markah topik untuk jana CQI Action Plan.</p>';
-    return `<div class="section-card" id="cqi-section"><h3>🎯 CQI Action Plan</h3>${msg}</div>`;
+  const hasAnyData = ca!==null || fa!==null || weakTopics.length>0;
+  if (!hasAnyData) return `<div class="sc"><h3>🎯 CQI Action Plan — CLO1 (C3)</h3><p style="color:#aaa;font-size:12px">Masukkan markah assessment dan topik untuk jana CQI Action Plan.</p></div>`;
+
+  const today=new Date();
+  const fmt=d=>d.toLocaleDateString('ms-MY',{day:'2-digit',month:'short',year:'numeric'});
+
+  // Assessment-level CQI (CA/FA gagal)
+  let assessCQI = '';
+  if (ca!==null && ca<50) {
+    assessCQI += `<div class="cqi-item crit" style="margin-bottom:10px">
+      <div class="cqi-topic crit">⚠️ CA Gagal — Test &amp; End of Chapter (Skor: ${ca}%)</div>
+      <div style="font-size:11px;color:#888;margin-bottom:8px">CLO1 · C3 · CA Score: <b style="color:#d32f2f">${ca}%</b> → Target: <b style="color:#388e3c">≥50%</b></div>
+      <ul class="cqi-acts">
+        <li><span class="ctype" style="background:#ffebee;color:#d32f2f">URGENT</span>Semak semula jawapan Test &amp; End of Chapter — kenal pasti soalan C3 (Apply) mana yang gagal</li>
+        <li><span class="ctype" style="background:#f3e5f5;color:#7b1fa2">Diagnosis</span>Pelajar gagal pada aras C3 (Apply) — kemungkinan kefahaman asas C1/C2 tidak kukuh</li>
+        <li><span class="ctype" style="background:#e3f2fd;color:#1565c0">Remediation</span>Sesi remediation fokus kepada kemahiran "Apply" — beri soalan berasaskan konteks / situasi baru</li>
+        <li><span class="ctype" style="background:#e8f5e9;color:#2e7d32">Latihan</span>Berikan soalan latihan aras C3: Gubah semula litar, cari arus/voltan dalam litar baru</li>
+      </ul>
+      <div class="coutcome">✅ Expected: CA Score meningkat kepada ≥50% — pelajar mampu menjawab soalan Apply level dalam Test dan End of Chapter.</div>
+    </div>`;
+  }
+  if (fa!==null && fa<50) {
+    assessCQI += `<div class="cqi-item crit" style="margin-bottom:10px">
+      <div class="cqi-topic crit">⚠️ FA Gagal — Final Examination (Skor: ${fa}%)</div>
+      <div style="font-size:11px;color:#888;margin-bottom:8px">CLO1 · C3 · FA Score: <b style="color:#d32f2f">${fa}%</b> → Target: <b style="color:#388e3c">≥50%</b></div>
+      <ul class="cqi-acts">
+        <li><span class="ctype" style="background:#ffebee;color:#d32f2f">URGENT</span>Analisis skrip Final Exam — kenal pasti soalan CLO1 C3 yang gagal dijawab</li>
+        <li><span class="ctype" style="background:#f3e5f5;color:#7b1fa2">Diagnosis</span>Semak sama ada pelajar gagal pada soalan teori (C1/C2) atau soalan analisis (C3/C4)</li>
+        <li><span class="ctype" style="background:#e3f2fd;color:#1565c0">Remediation</span>Program remediation intensif sebelum supplementary exam — fokus CLO1 C3</li>
+        <li><span class="ctype" style="background:#e8f5e9;color:#2e7d32">Latihan</span>Past year questions Final Exam — latih cara kerja yang sistematik (tunjuk semua langkah)</li>
+        <li><span class="ctype" style="background:#fff3e0;color:#e65100">Rujukan</span>Nilsson &amp; Riedel "Electric Circuits" · Hayt "Engineering Circuit Analysis" — Chapter berkaitan CLO1</li>
+      </ul>
+      <div class="coutcome">✅ Expected: FA Score meningkat kepada ≥50% dalam supplementary exam. Pelajar boleh apply theorems dalam situasi baru.</div>
+    </div>`;
   }
 
-  const today = new Date();
-  const items = weak.map((t,i)=>{
-    const isCrit = parseFloat(t.v)<40;
-    const start  = new Date(today); start.setDate(today.getDate()+i*7);
-    const end    = new Date(start); end.setDate(start.getDate()+6);
-    const fmt    = d => d.toLocaleDateString('ms-MY',{day:'2-digit',month:'short',year:'numeric'});
-    const target = Math.min(parseFloat(t.v)+25,75);
-    const actions = buildActions(t,isCrit);
-    return `
-      <div class="cqi-item ${isCrit?'critical':'weak'}">
-        <div class="cqi-topic ${isCrit?'critical':''}">
-          ${isCrit?'⚠️ ':'📌 '} Keutamaan ${i+1}: ${t.name}
-          &nbsp;<span style="font-size:11px;font-weight:400;color:#888">${fmt(start)} — ${fmt(end)}</span>
+  // Topic-level CQI
+  let topicCQI = '';
+  if (weakTopics.length) {
+    topicCQI = weakTopics.map((t,i)=>{
+      const isCrit=parseFloat(t.v)<40;
+      const start=new Date(today); start.setDate(today.getDate()+i*7);
+      const end=new Date(start); end.setDate(start.getDate()+6);
+      const target=Math.min(parseFloat(t.v)+25,75);
+      const acts=cqiActions(t,isCrit);
+      return `<div class="cqi-item ${isCrit?'crit':'weak'}">
+        <div class="cqi-topic ${isCrit?'crit':''}">${isCrit?'⚠️':'📌'} Topik ${i+1}: ${t.name}
+          <span style="font-size:10px;font-weight:400;color:#888">&nbsp;[CLO1 · ${t.bloom}] &nbsp;${fmt(start)}–${fmt(end)}</span>
         </div>
         <div style="font-size:11px;color:#888;margin-bottom:8px">
-          Markah semasa: <b style="color:${level(t.v).color}">${parseFloat(t.v).toFixed(0)}%</b> &nbsp;→&nbsp;
-          Target: <b style="color:#388e3c">${target}%</b>
+          Markah semasa: <b style="color:${level(t.v).color}">${parseFloat(t.v).toFixed(0)}%</b> → Target: <b style="color:#388e3c">≥${target}%</b>
         </div>
-        <ul class="cqi-actions">
-          ${actions.map(a=>`
-          <li>
-            <span class="cqi-type" style="background:${a.color}22;color:${a.color}">${a.type}</span>
-            ${a.desc}
-          </li>`).join('')}
-        </ul>
-        <div class="cqi-outcome">✅ Expected: Markah topik "${t.name}" meningkat daripada ${parseFloat(t.v).toFixed(0)}% kepada ≥${target}% dalam 1 minggu.</div>
+        <ul class="cqi-acts">${acts.map(a=>`<li><span class="ctype" style="background:${a.c}22;color:${a.c}">${a.t}</span>${a.d}</li>`).join('')}</ul>
+        <div class="coutcome">✅ Expected: Markah "${t.id.toUpperCase()}" meningkat daripada ${parseFloat(t.v).toFixed(0)}% kepada ≥${target}% dalam tempoh 1 minggu.</div>
       </div>`;
-  }).join('');
+    }).join('');
+  }
 
-  // Final review
-  const reviewDate = new Date(today); reviewDate.setDate(today.getDate()+weak.length*7+7);
-  const fmt = d=>d.toLocaleDateString('ms-MY',{day:'2-digit',month:'short',year:'numeric'});
+  const rev=new Date(today); rev.setDate(today.getDate()+(weakTopics.length||1)*7+7);
+  const allGood = ca>=50 && fa>=50 && !weakTopics.length;
 
-  return `
-    <div class="section-card" id="cqi-section">
-      <h3>🎯 CQI Action Plan — ${weak.length} Topik Perlu Remediation</h3>
-      ${items}
-      <div class="cqi-item" style="border-color:#1565c0;background:#e3f2fd;">
-        <div class="cqi-topic" style="color:#1565c0">📋 Penilaian Semula — ${fmt(reviewDate)}</div>
-        <ul class="cqi-actions">
-          <li><span class="cqi-type" style="background:#e3f2fd;color:#1565c0">Quiz</span>Jalankan post-remediation quiz untuk semua topik yang telah diremediasi</li>
-          <li><span class="cqi-type" style="background:#e3f2fd;color:#1565c0">Report</span>Dokumen perbandingan markah sebelum &amp; selepas, simpan dalam rekod CQI semester</li>
-          <li><span class="cqi-type" style="background:#e3f2fd;color:#1565c0">Decision</span>Tentukan sama ada pelajar perlukan remediation lanjutan atau sudah bersedia peperiksaan</li>
-        </ul>
-      </div>
-    </div>`;
+  return `<div class="sc">
+    <h3>🎯 CQI Action Plan — CLO1 (C3: Apply)</h3>
+    <div style="background:#e8eaf6;border-radius:8px;padding:10px 14px;margin-bottom:14px;font-size:12px;color:#3949ab;line-height:1.8">
+      <b>Fokus CQI:</b> CLO1 · Cognitive Domain · C3 (Apply) — Bloom's Taxonomy<br>
+      Pelajar perlu menunjukkan keupayaan <b>mengaplikasikan</b> theorems &amp; laws dalam situasi litar DC yang baru.
+    </div>
+    ${allGood
+      ? '<div style="text-align:center;padding:20px"><span style="font-size:36px">🎉</span><p style="color:#388e3c;font-weight:700;margin-top:10px">CLO1 dicapai! Pelajar lulus CA dan FA dengan semua topik memuaskan.</p></div>'
+      : assessCQI + (weakTopics.length ? `<div style="font-size:12px;font-weight:700;color:#1a237e;margin:14px 0 8px">📚 Remediation Per Topik:</div>${topicCQI}` : '')
+    }
+    <div class="cqi-item" style="border-color:#1565c0;background:#e3f2fd;margin-top:10px">
+      <div class="cqi-topic" style="color:#1565c0">📋 Penilaian Semula CLO1 — ${fmt(rev)}</div>
+      <ul class="cqi-acts">
+        <li><span class="ctype" style="background:#e3f2fd;color:#1565c0">Re-Test</span>Jalankan semula Test / soalan C3 untuk ukur peningkatan CLO1 selepas remediation</li>
+        <li><span class="ctype" style="background:#e3f2fd;color:#1565c0">Report</span>Dokumen perbandingan skor CLO1 sebelum &amp; selepas untuk rekod CQI semester</li>
+        <li><span class="ctype" style="background:#e3f2fd;color:#1565c0">OBE Check</span>Pastikan CLO1 attainment ≥50% untuk semua pelajar — update rekod OBE/PO mapping</li>
+      </ul>
+    </div>
+  </div>`;
 }
 
-function buildActions(t, isCrit) {
-  const actions = [];
-  if (isCrit) actions.push({ type:'URGENT', color:'#d32f2f', desc:`Hubungi pelajar segera. Markah ${parseFloat(t.v).toFixed(0)}% — jadual sesi remediation dalam 3 hari.` });
-  actions.push({ type:'Diagnosis',   color:'#7b1fa2', desc:`Semak semula jawapan untuk kenal pasti jenis kesilapan dalam "${t.name}"` });
-  actions.push({ type:'Remediation', color:'#1565c0', desc:`Sesi remediation 60–90 minit (1-to-1 atau kumpulan kecil) untuk topik "${t.name}"` });
-  actions.push({ type:'Latihan',     color:'#2e7d32', desc:`Berikan set soalan tambahan berperingkat (mudah → sederhana → susah)` });
-  actions.push({ type:'Rujukan',     color:'#e65100', desc:`Video: The Organic Chemistry Tutor (YouTube) · Buku: Nilsson & Riedel "Electric Circuits"` });
-  if (isCrit) actions.push({ type:'Progress', color:'#00838f', desc:'Buat mini-quiz selepas setiap sesi untuk pantau kemajuan harian' });
-  return actions;
+function cqiActions(t,isCrit){
+  const a=[];
+  if(isCrit) a.push({t:'URGENT',c:'#d32f2f',d:`Hubungi pelajar segera. Markah ${parseFloat(t.v).toFixed(0)}% dalam C3 (Apply) — jadual sesi dalam 3 hari.`});
+  a.push({t:'Diagnosis',  c:'#7b1fa2',d:`Semak jawapan untuk kenal pasti kesilapan dalam "${t.name}" — adakah gagal faham konsep atau gagal apply?`});
+  a.push({t:'Remediation',c:'#1565c0',d:`Sesi remediation C3 (Apply) 60–90 minit — gunakan soalan berasaskan litar sebenar`});
+  a.push({t:'Latihan',    c:'#2e7d32',d:`Set soalan Apply berperingkat: beri litar baru, minta pelajar solve step-by-step`});
+  a.push({t:'Rujukan',    c:'#e65100',d:`YouTube: The Organic Chemistry Tutor (Circuit Analysis) · Nilsson & Riedel — Chapter berkaitan ${t.id.toUpperCase()}`});
+  if(isCrit) a.push({t:'Progress',c:'#00838f',d:'Mini-quiz C3 selepas setiap sesi — semak sama ada pelajar boleh apply dalam konteks baru'});
+  return a;
 }
 
-// ─── PLACEHOLDER ──────────────────────────────────────────────
-function showPlaceholder() {
-  document.getElementById('panel-right').innerHTML = `
-    <div class="placeholder">
-      <div class="icon">📊</div>
-      <p>Pilih pelajar dari senarai sebelah kiri<br>untuk lihat prestasi dan input markah.</p>
-    </div>`;
-}
-
-// ─── EXPORT ───────────────────────────────────────────────────
-function exportReport() {
-  if (!students.length) { toast('⚠️ Tiada data untuk diexport'); return; }
-  const date = new Date().toLocaleDateString('ms-MY');
-  let text = `LAPORAN PRESTASI PELAJAR — ELECTRIC CIRCUIT 1\nTarikh: ${date}\n${'='.repeat(50)}\n\n`;
-  students.forEach((s,i) => {
-    const m = avgMarks(s);
-    const lv= level(m);
-    text += `${i+1}. ${s.name} (${s.studentId})${s.className?' | '+s.className:''}\n`;
-    text += `   Purata Assessment: ${m!==null?m+'%':'Belum diisi'} [${lv.label}]\n`;
-    ASSESSMENTS.forEach(a => {
-      const v = s.marks?.[a.id]; if(v!==''&&v!==undefined&&v!==null) text += `   ${a.name}: ${v}%\n`;
-    });
-    const weakT = TOPICS.filter(t=>{const v=s.topicMarks?.[t.id];return v!==''&&v!==undefined&&v!==null&&parseFloat(v)<60;});
-    if (weakT.length) text += `   ⚠ Topik Lemah: ${weakT.map(t=>t.name+' ('+s.topicMarks[t.id]+'%)').join(', ')}\n`;
-    text += '\n';
+// ─── EXPORT ────────────────────────────────────────────────
+window.exportReport = function() {
+  if(!students.length){toast('⚠️ Tiada data');return;}
+  const date=new Date().toLocaleDateString('ms-MY');
+  let txt=`LAPORAN PRESTASI PELAJAR — ELECTRIC CIRCUIT 1 (DET10103)\n`;
+  txt+=`CLO1: Apply concepts and principles of electrical circuit theorems (C3 — Bloom)\n`;
+  txt+=`Assessment: Test (15%) + End of Chapter (10%) + Final Exam (40%)\n`;
+  txt+=`Tarikh: ${date}\n${'='.repeat(56)}\n\n`;
+  students.forEach((s,i)=>{
+    const ca=caScore(s), fa=faScore(s), ps=passStatus(s);
+    txt+=`${i+1}. ${s.name} (${s.studentId})${s.className?' | '+s.className:''}\n`;
+    txt+=`   CA Score (Test+EoC): ${ca!==null?ca+'%':'—'} [${ca===null?'—':ca>=50?'LULUS':'GAGAL'}]\n`;
+    txt+=`   FA Score (Final):    ${fa!==null?fa+'%':'—'} [${fa===null?'—':fa>=50?'LULUS':'GAGAL'}]\n`;
+    txt+=`   Status CLO1:         ${ps.label}\n`;
+    ASSESSMENTS.forEach(a=>{const v=s.marks?.[a.id];if(v!==''&&v!==undefined&&v!==null)txt+=`   ${a.name} [${a.type}]: ${v}%\n`;});
+    const wk=TOPICS.filter(t=>{const v=s.topicMarks?.[t.id];return v!==''&&v!==undefined&&v!==null&&parseFloat(v)<60;});
+    if(wk.length) txt+=`   ⚠ Topik Lemah (C3): ${wk.map(t=>t.id.toUpperCase()+' ('+s.topicMarks[t.id]+'%)').join(', ')}\n`;
+    txt+='\n';
   });
-  const blob = new Blob([text], {type:'text/plain'});
-  const a = document.createElement('a');
-  a.href = URL.createObjectURL(blob);
-  a.download = `EC1_Laporan_${new Date().toISOString().split('T')[0]}.txt`;
+  const blob=new Blob([txt],{type:'text/plain'});
+  const a=document.createElement('a');
+  a.href=URL.createObjectURL(blob);
+  a.download=`EC1_Laporan_${new Date().toISOString().split('T')[0]}.txt`;
   a.click();
   toast('📤 Laporan diexport!');
-}
+};
 
-// ─── TOAST ────────────────────────────────────────────────────
-function toast(msg) {
-  const el = document.getElementById('toast');
-  el.textContent = msg; el.classList.add('show');
-  setTimeout(()=>el.classList.remove('show'), 2800);
-}
-
-// ─── INIT ─────────────────────────────────────────────────────
-updateStats();
-renderList();
+// ─── TOAST ─────────────────────────────────────────────────
+window.toast = function(msg) {
+  const el=document.getElementById('toast');
+  el.textContent=msg; el.classList.add('show');
+  setTimeout(()=>el.classList.remove('show'),3000);
+};
 </script>
 </body>
 </html>
